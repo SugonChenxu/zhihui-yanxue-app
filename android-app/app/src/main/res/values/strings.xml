@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">智绘研学e启航</string>
+    <string name="nav_home">首页</string>
+    <string name="nav_courses">课程</string>
+    <string name="nav_features">特色</string>
+    <string name="nav_profile">我的</string>
+    <string name="home_title">津门红色课堂</string>
+    <string name="course_categories">课程分类</string>
+    <string name="category_landmark">红色地标</string>
+    <string name="category_person">英雄人物</string>
+    <string name="category_relic">革命文物</string>
+    <string name="category_event">历史事件</string>
+    <string name="recommended_courses">推荐课程</string>
+    <string name="view_all">查看全部</string>
+    <string name="feature_vr">VR体验</string>
+    <string name="feature_live">直播微课</string>
+    <string name="feature_ar">AR寻宝</string>
+    <string name="feature_script">剧本杀</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="welcome">欢迎来到津门红色课堂</string>
+    <string name="slogan">趣游天津红，点燃少年梦</string>
+</resources>
