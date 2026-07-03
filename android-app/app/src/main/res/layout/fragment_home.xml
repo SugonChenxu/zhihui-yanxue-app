@@ -1,69 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <!-- 轮播图区域 -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/vp_carousel"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- 课程分类 -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/course_categories"
-            android:textColor="@color/text_primary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <GridLayout
-            android:id="@+id/grid_categories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:columnCount="2"
-            android:rowCount="2">
-
-            <!-- 分类卡片会通过代码动态添加 -->
-
-        </GridLayout>
-
-        <!-- 推荐课程 -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/recommended_courses"
-            android:textColor="@color/text_primary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_recommended"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp" />
-
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <FrameLayout android:id="@+id/layout_banner" android:layout_width="match_parent" android:layout_height="200dp" android:background="@drawable/bg_banner_gradient">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom" android:orientation="vertical" android:padding="20dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="津门红色课堂" android:textColor="#FFFFFFFF" android:textSize="26sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="趣游天津红 · 点燃少年梦" android:textColor="#B0FFFFFF" android:textSize="14sp" />
+            </LinearLayout>
+        </FrameLayout>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginTop="20dp" android:layout_marginEnd="16dp" android:text="课程分类" android:textColor="@color/text_primary" android:textSize="18sp" android:textStyle="bold" />
+        <GridLayout android:id="@+id/grid_categories" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginTop="12dp" android:layout_marginEnd="16dp" android:columnCount="2" android:rowCount="2" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginTop="24dp" android:layout_marginEnd="16dp" android:text="推荐课程" android:textColor="@color/text_primary" android:textSize="18sp" android:textStyle="bold" />
+        <LinearLayout android:id="@+id/layout_courses" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginTop="12dp" android:layout_marginEnd="16dp" android:layout_marginBottom="24dp" android:orientation="vertical" />
     </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
+</ScrollView>
