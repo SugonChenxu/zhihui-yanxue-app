@@ -23,7 +23,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.textTitle.text = "个人中心"
+        binding.txtTitle.text = "个人中心"
     }
 
     override fun onDestroyView() {

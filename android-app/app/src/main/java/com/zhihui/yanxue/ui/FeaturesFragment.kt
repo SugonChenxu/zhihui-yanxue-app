@@ -23,7 +23,7 @@ class FeaturesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.textTitle.text = "特色功能"
+        binding.txtTitle.text = "特色功能"
     }
 
     override fun onDestroyView() {

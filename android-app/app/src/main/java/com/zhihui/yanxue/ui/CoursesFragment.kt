@@ -24,7 +24,7 @@ class CoursesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // TODO: 实现课程列表
-        binding.textTitle.text = "课程列表"
+        binding.txtTitle.text = "课程列表"
     }
 
     override fun onDestroyView() {

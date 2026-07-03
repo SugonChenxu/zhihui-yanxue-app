@@ -3,6 +3,10 @@ package com.zhihui.yanxue
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.zhihui.yanxue.databinding.ActivityMainBinding
+import com.zhihui.yanxue.ui.HomeFragment
+import com.zhihui.yanxue.ui.CoursesFragment
+import com.zhihui.yanxue.ui.FeaturesFragment
+import com.zhihui.yanxue.ui.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
 
