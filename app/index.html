@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>智绘研学e启航</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="phone-frame" id="appFrame">
+
+  <!-- ===== 启动页 ===== -->
+  <div id="splash">
+    <div class="splash-icon">&#x1F3DB;</div>
+    <div class="splash-title">&#26234;&#32472;&#30740;&#23398;e&#36215;&#33322;</div>
+    <div class="splash-sub">&#27941;&#38376;&#32418;&#33394;&#35838;&#22530;</div>
+    <div class="splash-foot">&#22825;&#27941;&#21830;&#21153;&#32844;&#19994;&#23398;&#38498; &middot; &#32418;&#33394;&#26053;&#28216;&#31038;&#22242;</div>
+  </div>
+
+  <!-- ===== 首页 ===== -->
+  <div class="page show" id="pageHome">
+    <div class="status-bar"><span id="sTime">9:41</span><span>&#x1F4F6; &#x1F4E1; &#x1F50B;</span></div>
+    <div class="page-header"><h2>&#26234;&#32472;&#30740;&#23398; e&#36215;&#33322;</h2></div>
+    <div class="banner">&#128696; &#25506;&#23547;&#32418;&#33394;&#36275;&#36857; &middot; &#20256;&#25215;&#27941;&#38376;&#31934;&#31070;</div>
+    <div class="sec-title">&#35838;&#31243;&#27169;&#22359;</div>
+    <div class="module-grid">
+      <div class="mod-card" onclick="openPage('courseList','&#22320;&#26631;')">
+        <div class="mod-icon" style="background:#C91A1A">&#128205;</div><span>&#22320;&#26631;&#27169;&#22359;</span>
+      </div>
+      <div class="mod-card" onclick="openPage('courseList','&#20154;&#29289;')">
+        <div class="mod-icon" style="background:#8B0000">&#128100;</div><span>&#20154;&#29289;&#27169;&#22359;</span>
+      </div>
+      <div class="mod-card" onclick="openPage('courseList','&#25991;&#29289;')">
+        <div class="mod-icon" style="background:#A01919">&#127978;</div><span>&#27941;&#27961;&#25991;&#29289;</span>
+      </div>
+      <div class="mod-card" onclick="openPage('courseList','&#20107;&#20214;')">
+        <div class="mod-icon" style="background:#6B0000">&#128220;</div><span>&#21382;&#21490;&#20107;&#20214;</span>
+      </div>
+    </div>
+    <div class="sec-title">&#25512;&#33616;&#35838;&#31243;</div>
+    <div class="course-list">
+      <div class="course-card" onclick="openPage('courseDetail')">
+        <div class="course-thumb">&#9654;</div>
+        <div class="course-info">
+          <div class="course-title">&#22825;&#27941;&#21476;&#25991;&#21270;&#34966;&#32418;&#33394;&#36275;&#36857;</div>
+          <div class="course-meta">&#22320;&#26631;&#27169;&#22359; &middot; 12&#20998;&#38047;</div>
+        </div>
+      </div>
+      <div class="course-card" onclick="openPage('courseDetail')">
+        <div class="course-thumb">&#9654;</div>
+        <div class="course-info">
+          <div class="course-title">&#52;&#21171;&#27169;&#31934;&#31036;&#36827;&#35838;&#22561;</div>
+          <div class="course-meta">&#20154;&#29289;&#27169;&#22359; &middot; 15&#20998;&#38047;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 课程列表页 ===== -->
+  <div class="page" id="pageCourseList">
+    <div class="status-bar"><span id="sTime2">9:41</span><span>&#x1F4F6;</span></div>
+    <div class="page-header">
+      <button class="btn-back" onclick="openPage('pageHome')">&#8592;</button>
+      <h2 id="listTitle">&#35838;&#31243;&#21015;&#34920;</h2>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterTab(this)">&#20840;&#37096;</button>
+      <button class="filter-tab" onclick="filterTab(this)">&#23567;&#23398;</button>
+      <button class="filter-tab" onclick="filterTab(this)">&#20013;&#23398;</button>
+      <button class="filter-tab" onclick="filterTab(this)">&#22823;&#23398;</button>
+    </div>
+    <div class="course-list" id="courseListEl"></div>
+  </div>
+
+  <!-- ===== 课程详情页 ===== -->
+  <div class="page" id="pageCourseDetail">
+    <div class="status-bar"><span>9:41</span><span>&#x1F4F6;</span></div>
+    <div class="page-header">
+      <button class="btn-back" onclick="openPage('pageCourseList')">&#8592;</button>
+      <h2>&#35838;&#31243;&#35814;&#24773;</h2>
+    </div>
+    <div class="detail-video">&#9654; &#28857;&#20987;&#25773;&#25918;&#35838;&#31243;&#35270;&#39057;</div>
+    <div class="detail-body">
+      <h3 id="detailTitle">&#35838;&#31243;&#26631;&#39064;</h3>
+      <div class="detail-meta" id="detailMeta">&#27169;&#22359; &middot; &#26102;&#38271; &middot; &#36851;&#21512;&#23398;&#27573;</div>
+      <div class="detail-desc" id="detailDesc">&#35838;&#31243;&#25551;&#36848;&#21150;&#36753;</div>
+      <div class="btn-row">
+        <button class="btn-red" onclick="alert('&#25171;&#21345;&#25104;&#21151;&#65281;')">&#128221; &#35838;&#31243;&#25171;&#21345;</button>
+        <button class="btn-outline" onclick="alert('&#24050;&#25910;&#34255;&#65281;')">&#11088; &#25910;&#34255;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 特色功能页 ===== -->
+  <div class="page" id="pageFeature">
+    <div class="status-bar"><span>9:41</span><span>&#x1F4F6;</span></div>
+    <div class="page-header">
+      <button class="btn-back" onclick="openPage('pageHome')">&#8592;</button>
+      <h2>&#29305;&#33394;&#21151;&#33021;</h2>
+    </div>
+    <div class="feat-list">
+      <div class="feat-card" onclick="showComingSoon('VR&#27785;&#28044;&#20307;&#39432;')">
+        <div class="feat-icon" style="background:#1a1a2e">&#129412;</div>
+        <div class="feat-text"><h4>VR&#27785;&#28044;&#20307;&#39432;</h4><p>&#36523;&#20020;&#20854;&#22659;&#24863;&#21463;&#21382;&#21490;&#22330;&#26223;</p></div>
+        <span class="feat-arrow">&rsaquo;</span>
+      </div>
+      <div class="feat-card" onclick="showComingSoon('&#30452;&#25668;&#24494;&#35838;')">
+        <div class="feat-icon" style="background:#16213e">&#128225;</div>
+        <div class="feat-text"><h4>&#30452;&#25668;&#20114;&#21160;&#24494;&#35838;</h4><p>&#19987;&#23478;&#22312;&#32447;&#35762;&#35299;&#65292;&#23454;&#26102;&#20114;&#21160;</p></div>
+        <span class="feat-arrow">&rsaquo;</span>
+      </div>
+      <div class="feat-card" onclick="showComingSoon('AR&#23547;&#23566;')">
+        <div class="feat-icon" style="background:#0f3460">&#128269;</div>
+        <div class="feat-text"><h4>AR&#32423;&#33394;&#23547;&#23566;</h4><p>&#22312;&#32418;&#33394;&#22320;&#26631;&#20013;&#25506;&#32034;&#21382;&#21490;&#32447;&#32034;</p></div>
+        <span class="feat-arrow">&rsaquo;</span>
+      </div>
+      <div class="feat-card" onclick="showComingSoon('&#32423;&#33394;&#21095;&#26412;&#26432;')">
+        <div class="feat-icon" style="background:#533483">&#127917;</div>
+        <div class="feat-text"><h4>&#32423;&#33394;&#21095;&#26412;&#26432;</h4><p>&#35282;&#33394;&#25110;&#29983;&#65292;&#27785;&#28044;&#24335;&#23398;&#20064;&#21382;&#21490;</p></div>
+        <span class="feat-arrow">&rsaquo;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 个人中心页 ===== -->
+  <div class="page" id="pageProfile">
+    <div class="status-bar"><span>9:41</span><span>&#x1F4F6;</span></div>
+    <div class="profile-banner">
+      <div class="avatar">&#128100;</div>
+      <div class="name">&#28857;&#20987;&#30331;&#24405;</div>
+      <div class="desc">&#30331;&#24405;&#21518;&#21516;&#27493;&#23398;&#20064;&#35760;&#24405;</div>
+    </div>
+    <div class="menu-list">
+      <div class="menu-item" onclick="alert('&#23398;&#20064;&#35760;&#24405;&#24320;&#21457;&#20013;')"><span>&#128202; &#23398;&#20064;&#35760;&#24405;</span><span class="menu-arrow">&rsaquo;</span></div>
+      <div class="menu-item" onclick="alert('&#25105;&#30340;&#25910;&#34255;&#24320;&#21457;&#20013;')"><span>&#11088; &#25105;&#30340;&#25910;&#34255;</span><span class="menu-arrow">&rsaquo;</span></div>
+      <div class="menu-item" onclick="openPage('pageAbout')"><span>&#128214; &#20851;&#20110;&#25105;&#20204;</span><span class="menu-arrow">&rsaquo;</span></div>
+      <div class="menu-item" onclick="alert('&#35774;&#32622;&#24320;&#21457;&#20013;')"><span>&#9881; &#35774;&#32622;</span><span class="menu-arrow">&rsaquo;</span></div>
+    </div>
+  </div>
+
+  <!-- ===== 关于我们页 ===== -->
+  <div class="page" id="pageAbout">
+    <div class="status-bar"><span>9:41</span><span>&#x1F4F6;</span></div>
+    <div class="page-header">
+      <button class="btn-back" onclick="openPage('pageProfile')">&#8592;</button>
+      <h2>&#20851;&#20110;&#25105;&#20204;</h2>
+    </div>
+    <div class="about-wrap">
+      <div class="logo">&#127983;</div>
+      <h3>&#26234;&#32472;&#30740;&#23398;e&#36215;&#33322;</h3>
+      <div class="about-ver">&#29256;&#26412; 1.0.0&#183;MVP&#28436;&#31034;&#29256;</div>
+      <div class="about-desc">
+        &#26412;&#39033;&#30446;&#20381;&#25176;&#32418;&#33394;&#26053;&#28216;&#31038;&#22242;&#20154;&#25165;&#36164;&#28304;&#65292;&#31435;&#36215;&#22825;&#27941;&#32418;&#33394;&#26087;&#28216;&#26223;&#28857;&#36164;&#28304;&#65292;&#35774;&#35745;&ldquo;&#26234;&#32472;&#30740;&#23398;e&#36215;&#33322;&rdquo;&#35838;&#31243;APP&#65292;&#20026;&#22823;&#20013;&#23567;&#23398;&#29983;&#32676;&#20307;&#25552;&#20379;&ldquo;&#25506;&#23547;&#32418;&#33394;&#36275;&#36857;&#65292;&#32819;&#21548;&#32418;&#33394;&#25925;&#20107;&rdquo;&#29305;&#33394;&#32418;&#33394;&#30740;&#23398;&#23454;&#36341;&#25945;&#23398;&#35838;&#31243;&#12290;
+      </div>
+      <div class="about-team">
+        <h4>&#39033;&#30446;&#22242;&#38431;</h4>
+        <p>&#22825;&#27941;&#21830;&#21153;&#32844;&#19994;&#23398;&#38498; &middot; &#32418;&#33394;&#26085;&#28216;&#31038;&#22242;</p>
+        <p>&#36127;&#36131;&#20154;&#65306;&#26446;&#29577;&#20937;</p>
+        <p>&#25351;&#23548;&#32773;&#65306;&#24320;&#28059;&#23792;</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 底部导航 ===== -->
+  <div class="tab-bar" id="tabBar">
+    <div class="tab-item active" onclick="openPage('pageHome')">
+      <div class="tab-icon">&#127968;</div><div class="tab-label">&#39318;&#39029;</div>
+    </div>
+    <div class="tab-item" onclick="openPage('courseList','')">
+      <div class="tab-icon">&#128218;</div><div class="tab-label">&#35838;&#31243;</div>
+    </div>
+    <div class="tab-item" onclick="openPage('pageFeature')">
+      <div class="tab-icon">&#127918;</div><div class="tab-label">&#29305;&#33394;</div>
+    </div>
+    <div class="tab-item" onclick="openPage('pageProfile')">
+      <div class="tab-icon">&#128100;</div><div class="tab-label">&#25105;&#30340;</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
