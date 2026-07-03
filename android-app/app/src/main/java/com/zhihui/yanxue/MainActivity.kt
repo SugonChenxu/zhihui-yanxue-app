@@ -7,6 +7,7 @@ import com.zhihui.yanxue.ui.HomeFragment
 import com.zhihui.yanxue.ui.CoursesFragment
 import com.zhihui.yanxue.ui.FeaturesFragment
 import com.zhihui.yanxue.ui.ProfileFragment
+import com.zhihui.yanxue.ui.ShopFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home -> HomeFragment()
                 R.id.nav_courses -> CoursesFragment()
                 R.id.nav_features -> FeaturesFragment()
+                R.id.nav_shop -> ShopFragment()
                 R.id.nav_profile -> ProfileFragment()
                 else -> null
             }

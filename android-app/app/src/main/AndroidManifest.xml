@@ -41,6 +41,10 @@
             android:name=".ui.ProfileActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
