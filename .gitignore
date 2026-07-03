@@ -1,0 +1,30 @@
+# Node modules
+node_modules/
+package-lock.json
+package.json
+
+# Build outputs
+dist/
+build/
+out/
+*.apk
+*.aab
+*.ipa
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+
+# Temp files
+*.log
+*.tmp
+.workbuddy/
