@@ -10,8 +10,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.zhihui.yanxue.CheckInActivity
+import com.zhihui.yanxue.CheckInHistoryActivity
+import com.zhihui.yanxue.MessageActivity
 import com.zhihui.yanxue.R
 import com.zhihui.yanxue.SearchActivity
+import com.zhihui.yanxue.data.CheckInRepository
 
 class HomeFragment : Fragment() {
 
@@ -32,8 +37,11 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupTopBar()
         setupTabs()
+        updateCheckInCard()  // 更新签到卡片状态
+        setupCheckInCard()   // 设置签到卡片点击
         setupContent()
         binding.swipeRefresh.setOnRefreshListener {
+            updateCheckInCard()  // 下拉刷新时更新签到状态
             setupContent()
             binding.swipeRefresh.isRefreshing = false
         }
@@ -44,24 +52,21 @@ class HomeFragment : Fragment() {
             startActivity(Intent(requireContext(), SearchActivity::class.java))
         }
         binding.txtCheckin.setOnClickListener {
-            android.widget.Toast.makeText(requireContext(), "签到成功！连续打卡第7天", android.widget.Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireContext(), CheckInActivity::class.java))
         }
         binding.txtNotification.setOnClickListener {
-            android.widget.Toast.makeText(requireContext(), "消息功能演示", android.widget.Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireContext(), MessageActivity::class.java))
         }
     }
 
     private fun setupTabs() {
         val tabs = listOf("学习", "推荐", "探索", "观点", "专题")
-        val dp8 = dpToPx(8)
-        val dp16 = dpToPx(16)
         binding.layoutTabs.removeAllViews()
         for (tab in tabs) {
             val tv = TextView(requireContext()).apply {
                 text = tab
                 textSize = 14f
                 gravity = Gravity.CENTER
-                setPadding(dp16, dp8, dp16, dp8)
                 if (tab == currentTab) {
                     setTextColor(ContextCompat.getColor(requireContext(), R.color.primary_red))
                     setTypeface(null, android.graphics.Typeface.BOLD)
@@ -70,6 +75,10 @@ class HomeFragment : Fragment() {
                 }
                 setOnClickListener { onTabSelected(tab) }
             }
+            val params = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f).apply {
+                gravity = Gravity.CENTER
+            }
+            tv.layoutParams = params
             binding.layoutTabs.addView(tv)
         }
     }
@@ -147,7 +156,37 @@ class HomeFragment : Fragment() {
     }
 
     private fun dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).roundToInt()
+        return (dp * resources.displayMetrics.density + 0.5f).toInt()
+    }
+
+    /** 更新首页签到卡片状态 */
+    private fun updateCheckInCard() {
+        val isCheckedIn = CheckInRepository.isCheckedInToday(requireContext())
+        val continuousDays = CheckInRepository.getContinuousDays(requireContext())
+
+        if (isCheckedIn) {
+            binding.txtCheckinStatus.text = "今日已签到 ✓"
+            binding.txtCheckinStatus.setTextColor(requireContext().getColor(R.color.white))
+            binding.txtGoCheckin.text = "查看详情 →"
+        } else {
+            binding.txtCheckinStatus.text = "今日尚未签到"
+            binding.txtCheckinStatus.setTextColor(requireContext().getColor(R.color.white))
+            binding.txtGoCheckin.text = "去签到 →"
+        }
+        binding.txtCheckinDaysHint.text = "已连续签到${continuousDays}天"
+    }
+
+    /** 设置签到卡片点击事件 */
+    private fun setupCheckInCard() {
+        binding.cardCheckin.setOnClickListener {
+            startActivity(Intent(requireContext(), CheckInActivity::class.java))
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 从签到页返回后刷新状态
+        updateCheckInCard()
     }
 
     override fun onDestroyView() {

@@ -45,6 +45,18 @@
             android:name=".SearchActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".CheckInActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".MessageActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".CheckInHistoryActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

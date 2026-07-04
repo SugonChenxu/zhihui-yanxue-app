@@ -16,9 +16,7 @@ class ShopFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val tv = TextView(requireContext()).apply {
-            text = "商城页面
-
-功能开发中，敬请期待！"
+            text = "商城页面\n\n功能开发中，敬请期待！"
             textSize = 18f
             gravity = android.view.Gravity.CENTER
             setTextColor(resources.getColor(R.color.text_secondary, null))
