@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_course"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
+
+    <!-- 课程封面图 -->
+    <ImageView
+        android:id="@+id/iv_course_cover"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_article_1"
+        android:adjustViewBounds="true" />
+
+    <!-- 免费/付费标签 -->
+    <TextView
+        android:id="@+id/tv_free_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:text="免费"
+        android:textSize="10sp"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_tag_red" />
+
+    <!-- 课程标题 -->
+    <TextView
+        android:id="@+id/tv_course_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="8dp"
+        android:text="课程标题"
+        android:textSize="13sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:maxLines="2"
+        android:ellipsize="end" />
+
+    <!-- 学时 + 学习人数 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_clock"
+            android:tint="@color/text_hint" />
+
+        <TextView
+            android:id="@+id/tv_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:text="45分钟"
+            android:textSize="11sp"
+            android:textColor="@color/text_hint" />
+
+        <TextView
+            android:id="@+id/tv_student_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:gravity="end"
+            android:text="1280人学习"
+            android:textSize="11sp"
+            android:textColor="@color/text_hint" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

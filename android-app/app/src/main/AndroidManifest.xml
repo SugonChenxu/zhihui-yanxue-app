@@ -30,7 +30,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.CourseDetailActivity"
+            android:name=".CourseDetailActivity"
             android:exported="false" />
 
         <activity

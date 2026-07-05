@@ -3,53 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
-    <!-- 顶部标题 -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="课程中心"
-        android:textColor="@color/text_primary"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+    <!-- 左侧分类列表 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_category"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:elevation="2dp" />
 
-    <!-- 分类Tab -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
-
-        <Button
-            android:id="@+id/btn_tab_landmark"
-            style="@style/AppTheme.CategoryTab"
-            android:text="地标" />
-
-        <Button
-            android:id="@+id/btn_tab_person"
-            style="@style/AppTheme.CategoryTab"
-            android:text="人物" />
-
-        <Button
-            android:id="@+id/btn_tab_relic"
-            style="@style/AppTheme.CategoryTab"
-            android:text="文物" />
-
-        <Button
-            android:id="@+id/btn_tab_event"
-            style="@style/AppTheme.CategoryTab"
-            android:text="事件" />
-
-    </LinearLayout>
-
-    <!-- 课程列表 -->
+    <!-- 右侧课程网格 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_courses"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:padding="8dp" />
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:clipToPadding="false" />
 
 </LinearLayout>
