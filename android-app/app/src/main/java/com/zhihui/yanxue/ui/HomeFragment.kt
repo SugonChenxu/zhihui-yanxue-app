@@ -201,7 +201,7 @@ class HomeFragment : Fragment() {
 
         val scrollView = HorizontalScrollView(requireContext()).apply {
             isFillViewport = true
-            horizontalScrollBarEnabled = false
+            isHorizontalScrollBarEnabled = false
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -284,7 +284,7 @@ class HomeFragment : Fragment() {
             textSize = 10f
             setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             background = android.graphics.drawable.GradientDrawable().apply {
-                setColor(0x80000000)
+                setColor(0x80000000.toInt())
                 cornerRadius = dpToPx(3).toFloat()
             }
             setPadding(dpToPx(6), dpToPx(2), dpToPx(6), dpToPx(2))
@@ -371,6 +371,7 @@ class HomeFragment : Fragment() {
      * 创建置顶文章大卡片（仅推荐Tab使用）
      */
     private fun createPinnedArticleView(article: Article): View {
+        val dp8 = dpToPx(8)
         val dp10 = dpToPx(10)
         val dp12 = dpToPx(12)
         val dp14 = dpToPx(14)
@@ -454,7 +455,7 @@ class HomeFragment : Fragment() {
             textSize = 18f
             setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             setTypeface(null, android.graphics.Typeface.BOLD)
-            setShadowLayer(3f, 1f, 1f, 0x80000000)
+            setShadowLayer(3f, 1f, 1f, 0x80000000.toInt())
         }
         textOverlay.addView(title)
 
@@ -464,7 +465,7 @@ class HomeFragment : Fragment() {
             setTextColor(0xE0FFFFFF.toInt())
             maxLines = 2
             ellipsize = android.text.TextUtils.TruncateAt.END
-            setShadowLayer(2f, 1f, 1f, 0x80000000)
+            setShadowLayer(2f, 1f, 1f, 0x80000000.toInt())
             setPadding(0, dpToPx(4), 0, 0)
         }
         textOverlay.addView(summary)
