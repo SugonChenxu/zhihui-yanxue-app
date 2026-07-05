@@ -2,30 +2,52 @@ package com.zhihui.yanxue.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.HorizontalScrollView
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
 import com.zhihui.yanxue.ArticleDetailActivity
+import com.zhihui.yanxue.BannerAdapter
 import com.zhihui.yanxue.CheckInActivity
-import com.zhihui.yanxue.CheckInHistoryActivity
 import com.zhihui.yanxue.MessageActivity
 import com.zhihui.yanxue.R
 import com.zhihui.yanxue.SearchActivity
 import com.zhihui.yanxue.data.CheckInRepository
 import com.zhihui.yanxue.data.MockArticleRepository
 import com.zhihui.yanxue.data.model.Article
+import com.zhihui.yanxue.data.model.Banner
 
 class HomeFragment : Fragment() {
 
     private var _binding: com.zhihui.yanxue.databinding.FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private var currentTab = "推荐"
+
+    // === Banner 轮播相关 ===
+    private lateinit var bannerAdapter: BannerAdapter
+    private val banners: List<Banner> by lazy { MockArticleRepository.getBanners() }
+    private val bannerHandler = Handler(Looper.getMainLooper())
+    private var isBannerAutoScrolling = false
+
+    /** Banner 自动滚动任务 */
+    private val bannerRunnable = object : Runnable {
+        override fun run() {
+            if (!isBannerAutoScrolling || banners.isEmpty()) return
+            val current = binding.viewpagerBanner.currentItem
+            binding.viewpagerBanner.setCurrentItem(current + 1, true)
+            bannerHandler.postDelayed(this, 3000)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,15 +62,19 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupTopBar()
         setupTabs()
+        setupBanner()
         updateCheckInCard()
         setupCheckInCard()
         setupContent()
         binding.swipeRefresh.setOnRefreshListener {
             updateCheckInCard()
+            setupBanner()
             setupContent()
             binding.swipeRefresh.isRefreshing = false
         }
     }
+
+    // ==================== 顶部栏 ====================
 
     private fun setupTopBar() {
         binding.layoutSearch.setOnClickListener {
@@ -61,6 +87,8 @@ class HomeFragment : Fragment() {
             startActivity(Intent(requireContext(), MessageActivity::class.java))
         }
     }
+
+    // ==================== Tab 切换 ====================
 
     private fun setupTabs() {
         val tabs = listOf("学习", "推荐", "探索", "观点", "专题")
@@ -92,10 +120,109 @@ class HomeFragment : Fragment() {
         setupContent()
     }
 
+    // ==================== Banner 轮播 ====================
+
     /**
-     * 根据当前Tab渲染内容
-     * - 推荐 Tab: 3篇置顶文章(大卡片) + 专栏分区(横向滚动)
-     * - 其他 Tab: 专栏分区(横向滚动)，每分区4-5篇带图文章
+     * 初始化 ViewPager2 Banner 轮播
+     * - 无限滑动（Int.MAX_VALUE）
+     * - 自动循环滚动（3秒间隔）
+     * - 底部页码指示器
+     * - 点击跳转文章详情
+     * - 手指按下暂停自动滚动，抬起恢复
+     */
+    private fun setupBanner() {
+        if (banners.isEmpty()) return
+
+        bannerAdapter = BannerAdapter(banners) { banner ->
+            // 点击 Banner 跳转文章详情
+            val intent = Intent(requireContext(), ArticleDetailActivity::class.java).apply {
+                putExtra(ArticleDetailActivity.EXTRA_ARTICLE_ID, banner.articleId)
+            }
+            startActivity(intent)
+        }
+        binding.viewpagerBanner.adapter = bannerAdapter
+
+        // 设置初始位置到中间，实现"无限"向左滑动的效果
+        val midPosition = Int.MAX_VALUE / 2
+        val startPos = midPosition - (midPosition % banners.size)
+        binding.viewpagerBanner.setCurrentItem(startPos, false)
+
+        // 页面切换回调 — 更新指示器
+        binding.viewpagerBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                updateIndicator(bannerAdapter.getRealPosition(position))
+            }
+        })
+
+        // 设置指示器
+        setupIndicator()
+
+        // 触摸监听 — 按下暂停、抬起恢复（使用 post 确保 RecyclerView 已创建）
+        binding.viewpagerBanner.post {
+            val rv = binding.viewpagerBanner.getChildAt(0)
+            rv?.setOnTouchListener { _, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> stopBannerAutoScroll()
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> startBannerAutoScroll()
+                }
+                false
+            }
+        }
+
+        // 启动自动滚动
+        startBannerAutoScroll()
+    }
+
+    /** 创建底部页码指示器圆点 */
+    private fun setupIndicator() {
+        binding.layoutIndicator.removeAllViews()
+        val dotSize = dpToPx(8)
+        val dotMargin = dpToPx(4)
+        for (i in banners.indices) {
+            val dot = ImageView(requireContext()).apply {
+                setImageResource(R.drawable.dot_indicator_unselected)
+                layoutParams = LinearLayout.LayoutParams(dotSize, dotSize).apply {
+                    marginStart = dotMargin
+                    marginEnd = dotMargin
+                }
+            }
+            binding.layoutIndicator.addView(dot)
+        }
+        // 默认选中第一个
+        updateIndicator(0)
+    }
+
+    /** 更新指示器选中状态 */
+    private fun updateIndicator(selectedIndex: Int) {
+        val count = binding.layoutIndicator.childCount
+        for (i in 0 until count) {
+            val dot = binding.layoutIndicator.getChildAt(i) as ImageView
+            dot.setImageResource(
+                if (i == selectedIndex) R.drawable.dot_indicator_selected
+                else R.drawable.dot_indicator_unselected
+            )
+        }
+    }
+
+    /** 启动 Banner 自动滚动 */
+    private fun startBannerAutoScroll() {
+        if (isBannerAutoScrolling || banners.isEmpty()) return
+        isBannerAutoScrolling = true
+        bannerHandler.postDelayed(bannerRunnable, 3000)
+    }
+
+    /** 停止 Banner 自动滚动 */
+    private fun stopBannerAutoScroll() {
+        isBannerAutoScrolling = false
+        bannerHandler.removeCallbacks(bannerRunnable)
+    }
+
+    // ==================== 文章内容 ====================
+
+    /**
+     * 根据当前 Tab 渲染内容
+     * - 推荐 Tab: 3 篇置顶文章(大卡片) + 专栏分区(横向滚动)
+     * - 其他 Tab: 专栏分区(横向滚动)，每分区 4-5 篇带图文章
      */
     private fun setupContent() {
         binding.layoutContentCards.removeAllViews()
@@ -113,7 +240,7 @@ class HomeFragment : Fragment() {
         val articles = MockArticleRepository.getArticlesByTab(currentTab)
         if (articles.isEmpty()) return
 
-        // 推荐Tab: 先展示3篇置顶文章
+        // 推荐 Tab: 先展示 3 篇置顶文章
         if (currentTab == "推荐") {
             val pinnedArticles = MockArticleRepository.getPinnedArticles(currentTab)
             for (article in pinnedArticles) {
@@ -130,8 +257,8 @@ class HomeFragment : Fragment() {
             // 推荐 Tab 的"精选推荐"分区是置顶文章，已在上方展示，跳过
             if (currentTab == "推荐" && section == "精选推荐") continue
 
-            // 添加分区标题
-            val headerView = createSectionHeader(section)
+            // 添加分区标题（含差异化副标题）
+            val headerView = createSectionHeader(section, getSectionSubtitle(section))
             binding.layoutContentCards.addView(headerView)
 
             // 添加横向滚动文章列表
@@ -141,9 +268,30 @@ class HomeFragment : Fragment() {
     }
 
     /**
-     * 创建专栏分区标题
+     * 获取专栏差异化副标题
      */
-    private fun createSectionHeader(sectionName: String): View {
+    private fun getSectionSubtitle(section: String): String {
+        return when (section) {
+            "红色地标" -> "寻访津门革命遗址"
+            "革命人物" -> "致敬红色先驱英魂"
+            "精选推荐" -> "编辑精选不容错过"
+            "热门话题" -> "大家都在看"
+            "特色活动" -> "近期活动汇总"
+            "沉浸体验" -> "VR/AR 带您穿越时空"
+            "互动学习" -> "玩中学 学中玩"
+            "专家视角" -> "学者深度解读历史"
+            "青年之声" -> "学子心得感悟分享"
+            "红色线路" -> "六条精品研学路线"
+            "主题教育" -> "系统化学习指南"
+            else -> "精彩内容"
+        }
+    }
+
+    /**
+     * 创建专栏分区标题（含差异化副标题）
+     */
+    private fun createSectionHeader(sectionName: String, subtitle: String): View {
+        val dp4 = dpToPx(4)
         val dp8 = dpToPx(8)
         val dp16 = dpToPx(16)
         val dp14 = dpToPx(14)
@@ -171,15 +319,29 @@ class HomeFragment : Fragment() {
         }
         container.addView(indicator)
 
-        // 分区标题
+        // 标题 + 副标题竖排
+        val titleContainer = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
         val title = TextView(requireContext()).apply {
             text = sectionName
             textSize = 16f
             setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
             setTypeface(null, android.graphics.Typeface.BOLD)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
-        container.addView(title)
+        titleContainer.addView(title)
+
+        val subtitleView = TextView(requireContext()).apply {
+            text = subtitle
+            textSize = 11f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_hint))
+            setPadding(0, dp4, 0, 0)
+        }
+        titleContainer.addView(subtitleView)
+
+        container.addView(titleContainer)
 
         // 更多
         val more = TextView(requireContext()).apply {
@@ -247,13 +409,14 @@ class HomeFragment : Fragment() {
             )
         }
 
-        // 渐变背景
-        val imageView = View(requireContext()).apply {
+        // 图片（使用 ImageView 加载生成的 PNG 配图）
+        val imageView = ImageView(requireContext()).apply {
+            scaleType = ImageView.ScaleType.CENTER_CROP
             val resId = resources.getIdentifier(article.imageResName, "drawable", requireContext().packageName)
             if (resId != 0) {
-                setBackgroundResource(resId)
+                setImageResource(resId)
             } else {
-                setBackgroundResource(R.drawable.bg_article_1)
+                setImageResource(R.drawable.article_exhibition)
             }
         }
         imageFrame.addView(imageView)
@@ -368,7 +531,7 @@ class HomeFragment : Fragment() {
     }
 
     /**
-     * 创建置顶文章大卡片（仅推荐Tab使用）
+     * 创建置顶文章大卡片（仅推荐 Tab 使用）
      */
     private fun createPinnedArticleView(article: Article): View {
         val dp8 = dpToPx(8)
@@ -428,12 +591,14 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val imageView = View(requireContext()).apply {
+        // 使用 ImageView 加载生成的 PNG 配图
+        val imageView = ImageView(requireContext()).apply {
+            scaleType = ImageView.ScaleType.CENTER_CROP
             val resId = resources.getIdentifier(article.imageResName, "drawable", requireContext().packageName)
             if (resId != 0) {
-                setBackgroundResource(resId)
+                setImageResource(resId)
             } else {
-                setBackgroundResource(R.drawable.bg_article_1)
+                setImageResource(R.drawable.article_exhibition)
             }
         }
         imageFrame.addView(imageView)
@@ -445,9 +610,9 @@ class HomeFragment : Fragment() {
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
                 android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
                 Gravity.BOTTOM
-            ).apply {
-                setPadding(dp14, dp14, dp14, dp14)
-            }
+            )
+            setPadding(dp14, dp14, dp14, dp14)
+            background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_banner_overlay)
         }
 
         val title = TextView(requireContext()).apply {
@@ -508,6 +673,8 @@ class HomeFragment : Fragment() {
         return container
     }
 
+    // ==================== 工具方法 ====================
+
     /** 格式化阅读量 */
     private fun formatReadCount(count: Int): String {
         return if (count >= 1000) {
@@ -520,6 +687,8 @@ class HomeFragment : Fragment() {
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density + 0.5f).toInt()
     }
+
+    // ==================== 签到卡片 ====================
 
     /** 更新首页签到卡片状态 */
     private fun updateCheckInCard() {
@@ -545,13 +714,22 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // ==================== 生命周期 ====================
+
     override fun onResume() {
         super.onResume()
         updateCheckInCard()
+        startBannerAutoScroll()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopBannerAutoScroll()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        stopBannerAutoScroll()
         _binding = null
     }
 }

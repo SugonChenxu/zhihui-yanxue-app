@@ -2,6 +2,7 @@ package com.zhihui.yanxue
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +39,7 @@ class ArticleDetailActivity : AppCompatActivity() {
         // 绑定视图
         val btnBack = findViewById<View>(R.id.btn_back)
         val btnShare = findViewById<TextView>(R.id.btn_share)
-        val viewImage = findViewById<View>(R.id.view_detail_image)
+        val viewImage = findViewById<ImageView>(R.id.view_detail_image)
         val txtTag1 = findViewById<TextView>(R.id.txt_detail_tag1)
         val txtTag2 = findViewById<TextView>(R.id.txt_detail_tag2)
         val txtTitle = findViewById<TextView>(R.id.txt_detail_title)
@@ -49,10 +50,10 @@ class ArticleDetailActivity : AppCompatActivity() {
         val btnLike = findViewById<TextView>(R.id.btn_like)
         val btnCollect = findViewById<TextView>(R.id.btn_collect)
 
-        // 设置配图背景
+        // 设置配图
         val imageResId = resources.getIdentifier(article.imageResName, "drawable", packageName)
         if (imageResId != 0) {
-            viewImage.setBackgroundResource(imageResId)
+            viewImage.setImageResource(imageResId)
         }
 
         // 设置标签

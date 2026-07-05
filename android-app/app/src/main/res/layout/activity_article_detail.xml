@@ -58,11 +58,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp">
 
-                <View
+                <ImageView
                     android:id="@+id/view_detail_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_article_1" />
+                    android:scaleType="centerCrop"
+                    android:contentDescription="文章配图"
+                    android:src="@drawable/article_exhibition" />
             </FrameLayout>
 
             <!-- 文章信息卡片 -->

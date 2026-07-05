@@ -73,41 +73,28 @@
                         android:padding="8dp" />
                 </LinearLayout>
 
-                <!-- Banner 区域 -->
+                <!-- Banner轮播区域 (ViewPager2) -->
                 <FrameLayout
-                    android:id="@+id/layout_banner"
                     android:layout_width="match_parent"
                     android:layout_height="180dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="12dp"
-                    android:background="@drawable/bg_banner_gradient"
                     android:layout_marginBottom="12dp">
 
-                    <LinearLayout
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewpager_banner"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="bottom"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_height="match_parent" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="津门红色课堂"
-                            android:textColor="#FFFFFFFF"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="趣游天津红 · 点燃少年梦"
-                            android:textColor="#B0FFFFFF"
-                            android:textSize="13sp" />
-
-                    </LinearLayout>
+                    <!-- 页码指示器容器 -->
+                    <LinearLayout
+                        android:id="@+id/layout_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:orientation="horizontal"
+                        android:paddingBottom="8dp" />
                 </FrameLayout>
 
                 <!-- 分类标签区域 -->

@@ -48,11 +48,13 @@
         android:layout_height="160dp"
         android:layout_marginTop="6dp">
 
-        <View
+        <ImageView
             android:id="@+id/view_pinned_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_article_1" />
+            android:scaleType="centerCrop"
+            android:contentDescription="文章配图"
+            android:src="@drawable/article_exhibition" />
 
         <!-- 标题浮层 -->
         <LinearLayout
