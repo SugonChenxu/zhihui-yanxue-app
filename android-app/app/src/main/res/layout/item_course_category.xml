@@ -2,25 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_category_item"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="8dp"
+    android:layout_height="52dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="12dp"
     android:background="@drawable/bg_category_normal">
 
-    <ImageView
-        android:id="@+id/iv_category_icon"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:scaleType="centerInside"
-        android:tint="@color/text_secondary" />
+    <!-- 左侧红色指示条（选中时显示） -->
+    <View
+        android:id="@+id/view_indicator"
+        android:layout_width="3dp"
+        android:layout_height="18dp"
+        android:background="@color/primary_red"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_category_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textSize="12sp"
+        android:layout_marginStart="8dp"
+        android:text="分类名称"
+        android:textSize="14sp"
         android:textColor="@color/text_secondary"
         android:maxLines="1" />
 

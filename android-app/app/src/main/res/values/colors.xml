@@ -15,4 +15,7 @@
     <color name="text_hint">#FFBDBDBD</color>
     <color name="bottom_nav_selected">#C41E24</color>
     <color name="bottom_nav_unselected">#FF9E9E9E</color>
+    <!-- 新增颜色 -->
+    <color name="bg_gray">#FFF5F5F5</color>
+    <color name="rating_gold">#FFB800</color>
 </resources>
