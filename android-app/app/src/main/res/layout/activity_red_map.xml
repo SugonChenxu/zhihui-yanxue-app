@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RedMapActivity">
+
+    <!-- 高德地图 MapView -->
+    <com.amap.api.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- 顶部搜索框 -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:layout_anchorGravity="top">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_search"
+                android:contentDescription="搜索图标"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:hint="搜索红色场馆..."
+                android:background="@null"
+                android:textSize="14sp"
+                android:textColorHint="#9E9E9E" />
+
+            <ImageButton
+                android:id="@+id/btn_clear_search"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_clear"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:visibility="gone"
+                android:contentDescription="清除搜索"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- 右侧点位列表按钮 -->
+    <ImageButton
+        android:id="@+id/btn_toggle_list"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="end"
+        android:layout_margin="12dp"
+        android:src="@drawable/ic_list"
+        android:background="@drawable/bg_circle_button"
+        android:contentDescription="显示点位列表"
+        tools:ignore="ContentDescription" />
+
+    <!-- 返回全市按钮 -->
+    <ImageButton
+        android:id="@+id/btn_reset_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="12dp"
+        android:padding="12dp"
+        android:text="返回全市"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_btn_red"
+        android:visibility="gone"
+        tools:ignore="ContentDescription" />
+
+    <!-- 夜间模式切换按钮 -->
+    <ImageButton
+        android:id="@+id/btn_toggle_night"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="end"
+        android:layout_margin="12dp"
+        android:layout_marginBottom="60dp"
+        android:src="@drawable/ic_night"
+        android:background="@drawable/bg_circle_button"
+        android:contentDescription="夜间模式"
+        tools:ignore="ContentDescription" />
+
+    <!-- 侧边点位列表（右侧滑出） -->
+    <LinearLayout
+        android:id="@+id/layout_side_list"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:visibility="gone"
+        tools:ignore="ContentDescription">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:text="天津红色点位"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_red" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_red_sites"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <!-- 点位详情底部弹窗 -->
+    <LinearLayout
+        android:id="@+id/layout_detail_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:background="@color/white"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <ImageView
+            android:id="@+id/img_site_detail"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_site_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_site_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary" />
+
+            <TextView
+                android:id="@+id/tv_site_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:maxLines="5"
+                android:ellipsize="end" />
+
+            <Button
+                android:id="@+id/btn_close_detail"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:text="关闭"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_btn_red" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,6 +4,14 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 高德地图权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +21,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ZhiHuiYanXue"
         tools:targetApi="36">
+
+        <!-- 高德地图 API Key 配置 -->
+        <!-- 注意：请替换 YOUR_AMAP_API_KEY 为真实的高德地图 API Key -->
+        <!-- 申请地址：https://console.amap.com/dev/key/app -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="YOUR_AMAP_API_KEY" />
 
         <activity
             android:name=".MainActivity"
@@ -86,6 +101,12 @@
         <activity
             android:name=".ArticleDetailActivity"
             android:exported="false" />
+
+        <!-- 红色地图页面 -->
+        <activity
+            android:name=".RedMapActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ZhiHuiYanXue" />
 
     </application>
 

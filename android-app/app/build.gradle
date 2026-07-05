@@ -45,4 +45,9 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.viewpager2:viewpager2:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    
+    // 高德地图 SDK（红色地图模块）
+    implementation 'com.amap.api:map2d:5.6.0'
+    // 高德定位 SDK（可选，用于获取用户位置）
+    implementation 'com.amap.api:location:6.1.0'
 }
