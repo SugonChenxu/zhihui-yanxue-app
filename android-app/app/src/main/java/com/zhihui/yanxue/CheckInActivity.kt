@@ -9,7 +9,6 @@ import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.zhihui.yanxue.data.CheckInRepository
 import com.zhihui.yanxue.data.CheckInResult
 import com.zhihui.yanxue.CheckInHistoryActivity
@@ -21,7 +20,7 @@ import java.util.*
  * 核心功能：月度日历展示、每日签到、连续奖励
  * 排序保障：所有日期数据均通过 CheckInRepository 的排序函数获取，根治乱序
  */
-class CheckInActivity : AppCompatActivity() {
+class CheckInActivity : BaseActivity() {
 
     private lateinit var binding: ActivityCheckinBinding
     private var currentYear: Int = 0

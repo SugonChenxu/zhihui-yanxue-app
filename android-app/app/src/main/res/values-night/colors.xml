@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 夜间模式颜色资源 -->
+
+    <!-- 背景色 - 深色 -->
+    <color name="background">#1A1A1A</color>
+    <color name="background_dark">#121212</color>
+    <color name="white">#2A2A2A</color>
+
+    <!-- 文字颜色 - 浅色 -->
+    <color name="text_primary">#E1E1E1</color>
+    <color name="text_primary_dark">#E1E1E1</color>
+    <color name="text_secondary">#B0B0B0</color>
+    <color name="text_secondary_dark">#B0B0B0</color>
+    <color name="text_hint">#808080</color>
+
+    <!-- 卡片背景 - 深色 -->
+    <color name="card_background">#2A2A2A</color>
+</resources>

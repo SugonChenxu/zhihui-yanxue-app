@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.zhihui.yanxue.R
 import com.zhihui.yanxue.R.color
 
-class MessageActivity : AppCompatActivity() {
+class MessageActivity : BaseActivity() {
 
     private var currentMsgTab = "push"
     private lateinit var layoutMsgList: LinearLayout

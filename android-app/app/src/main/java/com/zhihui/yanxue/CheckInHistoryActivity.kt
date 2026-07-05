@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.zhihui.yanxue.data.CheckInRepository
 import com.zhihui.yanxue.data.CheckInRecord
 import com.zhihui.yanxue.databinding.ActivityCheckinHistoryBinding
@@ -17,7 +16,7 @@ import java.util.*
  * 功能：分页展示历史记录、按月筛选、倒序排列（最新在前）
  * 排序保障：所有记录渲染前均调用 sortRecordsDesc()，根治乱序
  */
-class CheckInHistoryActivity : AppCompatActivity() {
+class CheckInHistoryActivity : BaseActivity() {
 
     private lateinit var binding: ActivityCheckinHistoryBinding
     private var filterYear: Int = 0  // 0 表示全部

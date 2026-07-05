@@ -57,6 +57,36 @@
             android:name=".CheckInHistoryActivity"
             android:exported="false" />
 
+        <!-- 意见反馈页面 -->
+        <activity
+            android:name=".FeedbackActivity"
+            android:exported="false" />
+
+        <!-- 帮助中心页面 -->
+        <activity
+            android:name=".HelpCenterActivity"
+            android:exported="false" />
+
+        <!-- 设置页面 -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+
+        <!-- 商品详情页 -->
+        <activity
+            android:name=".ProductDetailActivity"
+            android:exported="false" />
+
+        <!-- 购物车页面 -->
+        <activity
+            android:name=".CartActivity"
+            android:exported="false" />
+
+        <!-- 文章详情页 -->
+        <activity
+            android:name=".ArticleDetailActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

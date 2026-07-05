@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.zhihui.yanxue.CheckInActivity
+import com.zhihui.yanxue.FeedbackActivity
+import com.zhihui.yanxue.HelpCenterActivity
 import com.zhihui.yanxue.R
-import com.zhihui.yanxue.data.MockUserRepository
+import com.zhihui.yanxue.SettingsActivity
 import com.zhihui.yanxue.databinding.FragmentProfileBinding
 
 /**
@@ -140,23 +142,23 @@ class ProfileFragment : Fragment() {
 
         // 意见反馈
         binding.menuFeedback.setOnClickListener {
-            // TODO: 跳转意见反馈页
             // Route: /feedback/add
-            showToast("意见反馈功能开发中")
+            val intent = Intent(requireContext(), FeedbackActivity::class.java)
+            startActivity(intent)
         }
 
         // 帮助中心
         binding.menuHelp.setOnClickListener {
-            // TODO: 跳转帮助中心页
             // Route: /help/faq
-            showToast("帮助中心功能开发中")
+            val intent = Intent(requireContext(), HelpCenterActivity::class.java)
+            startActivity(intent)
         }
 
         // 设置
         binding.menuSetting.setOnClickListener {
-            // TODO: 跳转设置页
             // Route: /user/setting
-            showToast("设置功能开发中")
+            val intent = Intent(requireContext(), SettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 

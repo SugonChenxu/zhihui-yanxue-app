@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.ZhiHuiYanXue" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.ZhiHuiYanXue" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- 主色调 -->
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>

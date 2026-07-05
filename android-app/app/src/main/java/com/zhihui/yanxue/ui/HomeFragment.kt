@@ -6,23 +6,26 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.zhihui.yanxue.ArticleDetailActivity
 import com.zhihui.yanxue.CheckInActivity
 import com.zhihui.yanxue.CheckInHistoryActivity
 import com.zhihui.yanxue.MessageActivity
 import com.zhihui.yanxue.R
 import com.zhihui.yanxue.SearchActivity
 import com.zhihui.yanxue.data.CheckInRepository
+import com.zhihui.yanxue.data.MockArticleRepository
+import com.zhihui.yanxue.data.model.Article
 
 class HomeFragment : Fragment() {
 
     private var _binding: com.zhihui.yanxue.databinding.FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private var currentTab = "学习"
+    private var currentTab = "推荐"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,11 +40,11 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupTopBar()
         setupTabs()
-        updateCheckInCard()  // 更新签到卡片状态
-        setupCheckInCard()   // 设置签到卡片点击
+        updateCheckInCard()
+        setupCheckInCard()
         setupContent()
         binding.swipeRefresh.setOnRefreshListener {
-            updateCheckInCard()  // 下拉刷新时更新签到状态
+            updateCheckInCard()
             setupContent()
             binding.swipeRefresh.isRefreshing = false
         }
@@ -89,69 +92,427 @@ class HomeFragment : Fragment() {
         setupContent()
     }
 
+    /**
+     * 根据当前Tab渲染内容
+     * - 推荐 Tab: 3篇置顶文章(大卡片) + 专栏分区(横向滚动)
+     * - 其他 Tab: 专栏分区(横向滚动)，每分区4-5篇带图文章
+     */
     private fun setupContent() {
         binding.layoutContentCards.removeAllViews()
-        val items = getMockDataForTab(currentTab)
-        val dp8 = dpToPx(8)
-        val dp12 = dpToPx(12)
-        for (item in items) {
-            val card = LinearLayout(requireContext()).apply {
-                orientation = LinearLayout.VERTICAL
-                background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_card_white)
-                setPadding(dp12, dp12, dp12, dp12)
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    bottomMargin = dp8
-                }
+
+        // 更新精选内容标题
+        binding.txtCategoryTitle.text = when (currentTab) {
+            "推荐" -> "为你推荐"
+            "学习" -> "红色学堂"
+            "探索" -> "沉浸探索"
+            "观点" -> "思想碰撞"
+            "专题" -> "红色专题"
+            else -> "精选内容"
+        }
+
+        val articles = MockArticleRepository.getArticlesByTab(currentTab)
+        if (articles.isEmpty()) return
+
+        // 推荐Tab: 先展示3篇置顶文章
+        if (currentTab == "推荐") {
+            val pinnedArticles = MockArticleRepository.getPinnedArticles(currentTab)
+            for (article in pinnedArticles) {
+                val pinnedView = createPinnedArticleView(article)
+                binding.layoutContentCards.addView(pinnedView)
             }
-            val title = TextView(requireContext()).apply {
-                text = item.first
-                textSize = 15f
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
-                setTypeface(null, android.graphics.Typeface.BOLD)
-            }
-            card.addView(title)
-            val desc = TextView(requireContext()).apply {
-                text = item.second
-                textSize = 12f
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
-                setPadding(0, dp8, 0, 0)
-            }
-            card.addView(desc)
-            binding.layoutContentCards.addView(card)
+        }
+
+        // 按专栏分区展示文章
+        val sections = MockArticleRepository.getSectionsByTab(currentTab)
+        for (section in sections) {
+            val sectionArticles = MockArticleRepository.getArticlesBySection(currentTab, section)
+
+            // 推荐 Tab 的"精选推荐"分区是置顶文章，已在上方展示，跳过
+            if (currentTab == "推荐" && section == "精选推荐") continue
+
+            // 添加分区标题
+            val headerView = createSectionHeader(section)
+            binding.layoutContentCards.addView(headerView)
+
+            // 添加横向滚动文章列表
+            val scrollRow = createHorizontalArticleRow(sectionArticles)
+            binding.layoutContentCards.addView(scrollRow)
         }
     }
 
-    private fun getMockDataForTab(tab: String): List<Pair<String, String>> {
-        return when (tab) {
-            "学习" -> listOf(
-                "周恩来精神与天津" to "走进周邓纪念馆，感悟伟人品格与革命情怀",
-                "平津战役全纪实" to "从战略部署到胜利会师，全景式回顾平津战役",
-                "觉悟社里的青春" to "探寻周恩来、马骏等青年志士的革命初心"
+    /**
+     * 创建专栏分区标题
+     */
+    private fun createSectionHeader(sectionName: String): View {
+        val dp8 = dpToPx(8)
+        val dp16 = dpToPx(16)
+        val dp14 = dpToPx(14)
+
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = dp14
+                bottomMargin = dp8
+                marginStart = dp16
+                marginEnd = dp16
+            }
+        }
+
+        // 左侧红色竖线
+        val indicator = View(requireContext()).apply {
+            setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary_red))
+            layoutParams = LinearLayout.LayoutParams(dpToPx(3), dpToPx(18)).apply {
+                marginEnd = dp8
+            }
+        }
+        container.addView(indicator)
+
+        // 分区标题
+        val title = TextView(requireContext()).apply {
+            text = sectionName
+            textSize = 16f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
+            setTypeface(null, android.graphics.Typeface.BOLD)
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        container.addView(title)
+
+        // 更多
+        val more = TextView(requireContext()).apply {
+            text = "更多 >"
+            textSize = 12f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
+        }
+        container.addView(more)
+
+        return container
+    }
+
+    /**
+     * 创建横向滚动的文章列表
+     */
+    private fun createHorizontalArticleRow(articles: List<Article>): View {
+        val dp12 = dpToPx(12)
+        val dp10 = dpToPx(10)
+
+        val scrollView = HorizontalScrollView(requireContext()).apply {
+            isFillViewport = true
+            horizontalScrollBarEnabled = false
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            "推荐" -> listOf(
-                "天津红色文化之旅" to "上线带你走遍天津红色景点",
-                "青少年的红色信仰" to "红色精神如何照亮青少年成长之路",
-                "VR体验：虎门行" to "沉浸式虚拟游览，足不出户感受天津红色文化"
+        }
+
+        val rowLayout = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(dp12, 0, dp12, 0)
+        }
+
+        for (article in articles) {
+            val cardView = createArticleCardView(article)
+            rowLayout.addView(cardView)
+        }
+
+        scrollView.addView(rowLayout)
+        return scrollView
+    }
+
+    /**
+     * 创建单篇文章卡片（横向滚动中的子项）
+     */
+    private fun createArticleCardView(article: Article): View {
+        val dp8 = dpToPx(8)
+        val dp10 = dpToPx(10)
+        val dp200 = dpToPx(200)
+        val dp110 = dpToPx(110)
+
+        val card = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_card_white)
+            layoutParams = LinearLayout.LayoutParams(dp200, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                marginEnd = dp10
+            }
+        }
+
+        // === 配图区域 ===
+        val imageFrame = android.widget.FrameLayout(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dp110
             )
-            "探索" -> listOf(
-                "天津红色地标地图" to "使用地图功能，探索天津各大红色地标",
-                "AR寻宝游戏" to "打开摄像头，在实景中寻找红色纪念品",
-                "红色脑力大挑战" to "通过问答闯关，测试你对天津红色文化的了解"
-            )
-            "观点" -> listOf(
-                "如何看待天津红色文化" to "专家观点：红色文化是城市的根与魂",
-                "青少年应如何传承红色精神" to "观点文章：创新传承方式，让红色文化活起来",
-                "红色旅游与乡村振兴的关系" to "观点：红色旅游如何助力乡村振兴"
-            )
-            "专题" -> listOf(
-                "天津红色教育专题系列" to "针对不同年龄段的红色教育专题课程",
-                "走进平津战役专题微课" to "专题系列微课，深度解读平津战役历史",
-                "平津战役专题展览" to "线上专题展览，多视角回顾历史瞬间"
-            )
-            else -> emptyList()
+        }
+
+        // 渐变背景
+        val imageView = View(requireContext()).apply {
+            val resId = resources.getIdentifier(article.imageResName, "drawable", requireContext().packageName)
+            if (resId != 0) {
+                setBackgroundResource(resId)
+            } else {
+                setBackgroundResource(R.drawable.bg_article_1)
+            }
+        }
+        imageFrame.addView(imageView)
+
+        // 标签
+        if (article.tags.isNotEmpty()) {
+            val tagText = TextView(requireContext()).apply {
+                text = article.tags[0]
+                textSize = 10f
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_tag_red)
+                setPadding(dp8, dpToPx(3), dp8, dpToPx(3))
+                layoutParams = android.widget.FrameLayout.LayoutParams(
+                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.TOP or Gravity.START
+                ).apply {
+                    topMargin = dp8
+                    leftMargin = dp8
+                }
+            }
+            imageFrame.addView(tagText)
+        }
+
+        // 阅读量
+        val readsText = TextView(requireContext()).apply {
+            text = formatReadCount(article.readCount)
+            textSize = 10f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            background = android.graphics.drawable.GradientDrawable().apply {
+                setColor(0x80000000)
+                cornerRadius = dpToPx(3).toFloat()
+            }
+            setPadding(dpToPx(6), dpToPx(2), dpToPx(6), dpToPx(2))
+            layoutParams = android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM or Gravity.END
+            ).apply {
+                bottomMargin = dpToPx(6)
+                rightMargin = dp8
+            }
+        }
+        imageFrame.addView(readsText)
+
+        card.addView(imageFrame)
+
+        // === 文字信息区域 ===
+        val textContainer = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp10, dp10, dp10, dp10)
+        }
+
+        // 标题
+        val title = TextView(requireContext()).apply {
+            text = article.title
+            textSize = 14f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
+            setTypeface(null, android.graphics.Typeface.BOLD)
+            maxLines = 2
+            ellipsize = android.text.TextUtils.TruncateAt.END
+        }
+        textContainer.addView(title)
+
+        // 摘要
+        val summary = TextView(requireContext()).apply {
+            text = article.summary
+            textSize = 11f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
+            maxLines = 2
+            ellipsize = android.text.TextUtils.TruncateAt.END
+            setPadding(0, dpToPx(4), 0, 0)
+        }
+        textContainer.addView(summary)
+
+        // 作者+日期
+        val infoRow = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(0, dpToPx(6), 0, 0)
+        }
+
+        val author = TextView(requireContext()).apply {
+            text = article.author
+            textSize = 10f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_hint))
+            maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        infoRow.addView(author)
+
+        val date = TextView(requireContext()).apply {
+            text = article.publishDate
+            textSize = 10f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_hint))
+        }
+        infoRow.addView(date)
+
+        textContainer.addView(infoRow)
+        card.addView(textContainer)
+
+        // 点击跳转详情
+        card.setOnClickListener {
+            val intent = Intent(requireContext(), ArticleDetailActivity::class.java).apply {
+                putExtra(ArticleDetailActivity.EXTRA_ARTICLE_ID, article.id)
+            }
+            startActivity(intent)
+        }
+
+        return card
+    }
+
+    /**
+     * 创建置顶文章大卡片（仅推荐Tab使用）
+     */
+    private fun createPinnedArticleView(article: Article): View {
+        val dp10 = dpToPx(10)
+        val dp12 = dpToPx(12)
+        val dp14 = dpToPx(14)
+        val dp160 = dpToPx(160)
+
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_card_white)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                bottomMargin = dp10
+            }
+        }
+
+        // 置顶标识行
+        val topRow = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp12, dp10, dp12, 0)
+        }
+
+        val pinnedTag = TextView(requireContext()).apply {
+            text = "置顶"
+            textSize = 10f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_tag_red)
+            setPadding(dp8, dpToPx(2), dp8, dpToPx(2))
+        }
+        topRow.addView(pinnedTag)
+
+        val spacer = View(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(0, 0, 1f)
+        }
+        topRow.addView(spacer)
+
+        val readsText = TextView(requireContext()).apply {
+            text = formatReadCount(article.readCount)
+            textSize = 10f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_hint))
+        }
+        topRow.addView(readsText)
+
+        container.addView(topRow)
+
+        // 配图区域
+        val imageFrame = android.widget.FrameLayout(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dp160
+            ).apply {
+                topMargin = dpToPx(6)
+            }
+        }
+
+        val imageView = View(requireContext()).apply {
+            val resId = resources.getIdentifier(article.imageResName, "drawable", requireContext().packageName)
+            if (resId != 0) {
+                setBackgroundResource(resId)
+            } else {
+                setBackgroundResource(R.drawable.bg_article_1)
+            }
+        }
+        imageFrame.addView(imageView)
+
+        // 标题浮层
+        val textOverlay = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM
+            ).apply {
+                setPadding(dp14, dp14, dp14, dp14)
+            }
+        }
+
+        val title = TextView(requireContext()).apply {
+            text = article.title
+            textSize = 18f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            setTypeface(null, android.graphics.Typeface.BOLD)
+            setShadowLayer(3f, 1f, 1f, 0x80000000)
+        }
+        textOverlay.addView(title)
+
+        val summary = TextView(requireContext()).apply {
+            text = article.summary
+            textSize = 12f
+            setTextColor(0xE0FFFFFF.toInt())
+            maxLines = 2
+            ellipsize = android.text.TextUtils.TruncateAt.END
+            setShadowLayer(2f, 1f, 1f, 0x80000000)
+            setPadding(0, dpToPx(4), 0, 0)
+        }
+        textOverlay.addView(summary)
+
+        imageFrame.addView(textOverlay)
+        container.addView(imageFrame)
+
+        // 作者信息行
+        val authorRow = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp10, dp10, dp10, dp10)
+        }
+
+        val author = TextView(requireContext()).apply {
+            text = article.author
+            textSize = 12f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        authorRow.addView(author)
+
+        val date = TextView(requireContext()).apply {
+            text = article.publishDate
+            textSize = 11f
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_hint))
+        }
+        authorRow.addView(date)
+
+        container.addView(authorRow)
+
+        // 点击跳转详情
+        container.setOnClickListener {
+            val intent = Intent(requireContext(), ArticleDetailActivity::class.java).apply {
+                putExtra(ArticleDetailActivity.EXTRA_ARTICLE_ID, article.id)
+            }
+            startActivity(intent)
+        }
+
+        return container
+    }
+
+    /** 格式化阅读量 */
+    private fun formatReadCount(count: Int): String {
+        return if (count >= 1000) {
+            String.format("%.1fk阅读", count / 1000.0)
+        } else {
+            "${count}阅读"
         }
     }
 
@@ -185,7 +546,6 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // 从签到页返回后刷新状态
         updateCheckInCard()
     }
 

@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical">
+    android:background="@color/background">
 
-    <TextView
-        android:id="@+id/txt_title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="特色功能"
-        android:textColor="@color/text_primary"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <GridLayout
-        android:id="@+id/grid_features"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:columnCount="2"
-        android:rowCount="2">
+        <!-- 顶部标题 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="特色功能"
+            android:textColor="@color/text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="16dp" />
 
-        <!-- 特色功能卡片会通过代码动态添加 -->
+        <!-- VR体验卡片 -->
+        <include layout="@layout/item_feature_card" />
 
-    </GridLayout>
+        <!-- 直播微课卡片 -->
+        <include layout="@layout/item_feature_card" />
 
-</LinearLayout>
+        <!-- AR寻宝卡片 -->
+        <include layout="@layout/item_feature_card" />
+
+        <!-- 红色剧本杀卡片 -->
+        <include layout="@layout/item_feature_card" />
+
+        <!-- 课程地图卡片 -->
+        <include layout="@layout/item_feature_card" />
+
+    </LinearLayout>
+
+</ScrollView>
