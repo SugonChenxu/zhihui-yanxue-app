@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.zhihui.yanxue.R
+import com.zhihui.yanxue.CourseDetailActivity
 import com.zhihui.yanxue.data.MockCourseRepository
-import com.zhihui.yanxue.data.model.CourseCategory
 import com.zhihui.yanxue.databinding.FragmentCoursesBinding
 
 /**
