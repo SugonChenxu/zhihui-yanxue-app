@@ -34,7 +34,7 @@ class FeaturesFragment : Fragment() {
     private fun setupFeatureCards() {
         // 1. VR体验
         setupFeature(
-            card = binding.featureVr,
+            card = binding.featureVr.root,
             icon = R.drawable.ic_vr,
             title = "VR体验",
             desc = "身临其境感受红色场馆，沉浸式学习革命历史",
@@ -43,7 +43,7 @@ class FeaturesFragment : Fragment() {
 
         // 2. 直播微课
         setupFeature(
-            card = binding.featureLive,
+            card = binding.featureLive.root,
             icon = R.drawable.ic_live,
             title = "直播微课",
             desc = "名师在线直播授课，随时随地学党史知国情",
@@ -52,7 +52,7 @@ class FeaturesFragment : Fragment() {
 
         // 3. AR寻宝
         setupFeature(
-            card = binding.featureAr,
+            card = binding.featureAr.root,
             icon = R.drawable.ic_ar,
             title = "AR寻宝",
             desc = "AR互动探索红色文物，趣味学习寓教于乐",
@@ -61,7 +61,7 @@ class FeaturesFragment : Fragment() {
 
         // 4. 红色剧本杀
         setupFeature(
-            card = binding.featureScriptKill,
+            card = binding.featureScriptKill.root,
             icon = R.drawable.ic_script,
             title = "红色剧本杀",
             desc = "扮演革命角色体验历史，深度参与红色故事演绎",
@@ -70,7 +70,7 @@ class FeaturesFragment : Fragment() {
 
         // 5. 红色地图（天津红色地标分布）
         setupFeature(
-            card = binding.featureRedMap,
+            card = binding.featureRedMap.root,
             icon = R.drawable.ic_map,
             title = "红色地图",
             desc = "天津红色教育点位导航，探索津门革命足迹",
