@@ -74,7 +74,7 @@
         tools:ignore="ContentDescription" />
 
     <!-- 返回全市按钮 -->
-    <ImageButton
+    <Button
         android:id="@+id/btn_reset_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

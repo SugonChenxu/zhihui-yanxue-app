@@ -32,6 +32,10 @@ Thumbs.db
 # Gradle
 .gradle/
 **/.gradle/
+local.properties
+
+# Android build outputs
+**/build/
 
 # Downloads
 downloads/

@@ -3,6 +3,14 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+// 从 local.properties 读取高德地图 API Key
+def localProps = new Properties()
+def localPropsFile = rootProject.file('local.properties')
+if (localPropsFile.exists()) {
+    localProps.load(new FileInputStream(localPropsFile))
+}
+def amapApiKey = localProps.getProperty('amap_api_key', 'YOUR_AMAP_API_KEY')
+
 android {
     namespace 'com.zhihui.yanxue'
     compileSdk 36
@@ -13,6 +21,16 @@ android {
         targetSdk 36
         versionCode 1
         versionName '1.0.0'
+
+        // 高德地图 SDK 10.x 仅支持 armeabi-v7a 和 arm64-v8a
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
+
+        // 将高德 API Key 注入 AndroidManifest
+        manifestPlaceholders = [
+            AMAP_API_KEY: amapApiKey
+        ]
     }
 
     buildTypes {
@@ -45,9 +63,9 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.viewpager2:viewpager2:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    
-    // 高德地图 SDK（红色地图模块）
-    implementation 'com.amap.api:map2d:5.6.0'
-    // 高德定位 SDK（可选，用于获取用户位置）
-    implementation 'com.amap.api:location:6.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    // 高德地图 SDK（3D地图 + 定位 + 搜索 合包）
+    // 已包含地图、定位、搜索功能，无需单独引用
+    implementation 'com.amap.api:3dmap-location-search:latest.integration'
 }

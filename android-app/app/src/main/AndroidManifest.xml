@@ -23,11 +23,10 @@
         tools:targetApi="36">
 
         <!-- 高德地图 API Key 配置 -->
-        <!-- 注意：请替换 YOUR_AMAP_API_KEY 为真实的高德地图 API Key -->
-        <!-- 申请地址：https://console.amap.com/dev/key/app -->
+        <!-- Key 从 local.properties 的 amap_api_key 读取，不进入版本控制 -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="YOUR_AMAP_API_KEY" />
+            android:value="${AMAP_API_KEY}" />
 
         <activity
             android:name=".MainActivity"

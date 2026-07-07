@@ -24,7 +24,21 @@
 }
 
 # Remove logging
--assumenosideffects class android.util.Log {
+-assumenosideeffects class android.util.Log {
     public static *** d(...);
     public static *** v(...);
 }
+
+# 高德地图 SDK 混淆规则
+-keep class com.amap.api.** { *; }
+-keep class com.autonavi.** { *; }
+-keep class com.locnna.** { *; }
+-keep class com.a.a.** { *; }
+-keep class com.amap.api.location.** { *; }
+-keep class com.amap.api.fence.** { *; }
+-keep class com.amap.api.maps.** { *; }
+-keep class com.amap.api.maps2d.** { *; }
+-keep class com.amap.api.search.** { *; }
+-keep class com.amap.api.services.** { *; }
+-dontwarn com.amap.api.**
+-dontwarn com.autonavi.**

@@ -218,7 +218,7 @@ class RedMapActivity : AppCompatActivity() {
         binding.btnToggleNight.setOnClickListener {
             isNightMode = !isNightMode
             if (isNightMode) {
-                aMap.mapType = AMAP.MAP_TYPE_NIGHT  // 夜间模式
+                aMap.mapType = AMap.MAP_TYPE_NIGHT  // 夜间模式
                 binding.btnToggleNight.setImageResource(R.drawable.ic_day)
             } else {
                 aMap.mapType = AMAP.MAP_TYPE_NORMAL  // 正常模式

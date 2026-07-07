@@ -21,19 +21,29 @@
             android:paddingBottom="16dp" />
 
         <!-- VR体验卡片 -->
-        <include layout="@layout/item_feature_card" />
+        <include
+            android:id="@+id/feature_vr"
+            layout="@layout/item_feature_card" />
 
         <!-- 直播微课卡片 -->
-        <include layout="@layout/item_feature_card" />
+        <include
+            android:id="@+id/feature_live"
+            layout="@layout/item_feature_card" />
 
         <!-- AR寻宝卡片 -->
-        <include layout="@layout/item_feature_card" />
+        <include
+            android:id="@+id/feature_ar"
+            layout="@layout/item_feature_card" />
 
         <!-- 红色剧本杀卡片 -->
-        <include layout="@layout/item_feature_card" />
+        <include
+            android:id="@+id/feature_script_kill"
+            layout="@layout/item_feature_card" />
 
-        <!-- 课程地图卡片 -->
-        <include layout="@layout/item_feature_card" />
+        <!-- 课程地图卡片（红色地标分布） -->
+        <include
+            android:id="@+id/feature_red_map"
+            layout="@layout/item_feature_card" />
 
     </LinearLayout>
 
